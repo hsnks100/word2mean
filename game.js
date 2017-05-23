@@ -1,39 +1,59 @@
 var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload: preload, create: create });
+
 function preload() {
 
-    game.load.image('picture7', 'sangduk.png');
+    //  You can fill the preloader with as many assets as your game requires
+
+    //  Here we are loading an image. The first parameter is the unique
+    //  string by which we'll identify the image later in our code.
+
+    //  The second parameter is the URL of the image (relative)
+    game.load.image('bullet', 'bullet.png');
 
 }
-
-var timer;
-var total = 0;
 
 function create() {
 
-    game.stage.backgroundColor = '#000';
+    //  This creates a simple sprite that is using our loaded image and
+    //  displays it on-screen
+    var s = game.add.sprite(80, 0, 'bullet'); 
+    s.rotation = 0.14;
 
-    //  Create our Timer
-    timer = game.time.create(false);
+    var s2 = game.add.sprite(0, 0, 'bullet'); 
+    var s3 = game.add.sprite(780, 570, 'bullet'); 
+    var s4 = game.add.sprite(800, 600, 'bullet'); 
+    s4.anchor.x = 0.5;
+    s4.anchor.y = 0.5;
 
-    //  Set a TimerEvent to occur after 2 seconds
-    timer.loop(2000, updateCounter, this);
 
-    //  Start the timer running - this is important!
-    //  It won't start automatically, allowing you to hook it to button events and the like.
-    timer.start();
+    // 일반적
+    function MyObject(){
+        var name = "var name";
+        this.name = "this name"; 
+    };
 
+    var ins = new MyObject();
+    console.log(ins.name);
+
+    var Animal = function(sex, name){
+        if (arguments.length == 1){
+            this.sex = sex;
+        }
+    };
+
+    var Cat = function(name){
+        this.name = name;
+    };
+    Cat.prototype = new Animal();
+
+    var Dog = function(name){
+        this.name = name;
+    };
+    Dog.prototype = new Animal();
+
+    var danbi = new Cat("단비");
+    var sundol = new Dog("순돌");
+
+    console.log(danbi.name);
+    console.log(sundol.name); 
 }
-
-function updateCounter() {
-
-    total++;
-
-}
-
-function render() {
-
-    game.debug.text('Time until event: ' + timer.duration.toFixed(0), 32, 32);
-    game.debug.text('Loop Count: ' + total, 32, 64);
-
-}
-
