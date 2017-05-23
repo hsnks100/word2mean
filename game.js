@@ -1,23 +1,39 @@
 var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload: preload, create: create });
-
 function preload() {
 
-    //  You can fill the preloader with as many assets as your game requires
-
-    //  Here we are loading an image. The first parameter is the unique
-    //  string by which we'll identify the image later in our code.
-
-    //  The second parameter is the URL of the image (relative)
-    game.load.image('einstein', 'sangduk.png');
+    game.load.image('picture7', 'assets/pics/slayer-sorry_im_the_beast.png');
 
 }
+
+var timer;
+var total = 0;
 
 function create() {
 
-    //  This creates a simple sprite that is using our loaded image and
-    //  displays it on-screen
-    var s = game.add.sprite(80, 0, 'einstein');
+    game.stage.backgroundColor = '#000';
 
-    s.rotation = 0.14;
+    //  Create our Timer
+    timer = game.time.create(false);
+
+    //  Set a TimerEvent to occur after 2 seconds
+    timer.loop(2000, updateCounter, this);
+
+    //  Start the timer running - this is important!
+    //  It won't start automatically, allowing you to hook it to button events and the like.
+    timer.start();
 
 }
+
+function updateCounter() {
+
+    total++;
+
+}
+
+function render() {
+
+    game.debug.text('Time until event: ' + timer.duration.toFixed(0), 32, 32);
+    game.debug.text('Loop Count: ' + total, 32, 64);
+
+}
+
