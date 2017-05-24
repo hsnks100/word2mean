@@ -1,42 +1,43 @@
-var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload: preload, create: create, update:update });
-
-function preload() {
-
-    //  You can fill the preloader with as many assets as your game requires
-
-    //  Here we are loading an image. The first parameter is the unique
-    //  string by which we'll identify the image later in our code.
-
-    //  The second parameter is the URL of the image (relative)
-    game.load.image('bullet', 'bullet.png');
-
-}
-var bullet = null;
-
-var lastTime = 0;
-function create() {
-
-    //  This creates a simple sprite that is using our loaded image and
-    //  displays it on-screen
-
-    bullet = game.add.sprite(400, 300, 'bullet'); 
-    bullet.anchor.x = 0.5;
-    bullet.anchor.y = 0.5; 
-    lastTime = this.game.time.totalElapsedSeconds();
-}
-
-function getRandomArbitrary(min, max) {
+function randomRange(min, max) {
     return Math.random() * (max - min) + min;
 }
-function update(){
-    var dt = this.game.time.totalElapsedSeconds() - lastTime;
-    // console.log(dt);
 
-
-    bullet.position.x += getRandomArbitrary(-100, 100) * dt;
-    bullet.position.y += getRandomArbitrary(-100, 100) * dt;
-    lastTime = this.game.time.totalElapsedSeconds();
-    // console.log(this.game.time.elapsed);
-    // console.log(dt._deltaTime);
-
+function Scene(){
+    var self = this;
+    this.create = function(){
+    };
+    this.elapsedTime = 0;
+    this.lastCreatedTime = 0;
+    this.update = function(){
+        self.elapsedTime += this.game.time.desiredFpsMult;
+        if (self.elapsedTime - self.lastCreatedTime > 1){
+            var b = new Bullet(this.game);
+            this.game.add.existing(b);
+            self.lastCreatedTime = self.elapsedTime; 
+        } 
+    };
+    this.preload = function(){
+        this.game.load.image('bullet', 'bullet.png'); 
+    }
 }
+
+var scene = new Scene();
+var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload: scene.preload, create: scene.create, update:scene.update });
+// function invertY(y) {  return game.world.height - y;}
+
+function Bullet(game){
+    Phaser.Sprite.call(this, game, 0, 0, 'bullet');
+    this.velocity = randomRange(1, 100);
+
+    var randomAngle = randomRange(0, 3.14*2);
+    this.position.x = 400 + Math.cos(randomAngle) * 400;
+    this.position.y = 300 + Math.sin(randomAngle) * 400;
+    this.theta = 3.14 + randomAngle;
+
+    this.update = function(){
+        this.position.x += Math.cos(this.theta) * 80.0 * this.game.time.desiredFpsMult;
+        this.position.y += Math.sin(this.theta) * 80.0 * this.game.time.desiredFpsMult;
+    }
+}
+
+Bullet.prototype = Phaser.Sprite.prototype;
