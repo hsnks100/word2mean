@@ -27,7 +27,7 @@ var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload:
 
 function Bullet(game){
     Phaser.Sprite.call(this, game, 0, 0, 'bullet');
-    this.velocity = randomRange(1, 100);
+    this.velocity = randomRange(80, 160);
 
     var randomAngle = randomRange(0, 3.14*2);
     this.position.x = 400 + Math.cos(randomAngle) * 400;
@@ -35,8 +35,8 @@ function Bullet(game){
     this.theta = 3.14 + randomAngle;
 
     this.update = function(){
-        this.position.x += Math.cos(this.theta) * 80.0 * this.game.time.desiredFpsMult;
-        this.position.y += Math.sin(this.theta) * 80.0 * this.game.time.desiredFpsMult;
+        this.position.x += Math.cos(this.theta) * this.velocity * this.game.time.desiredFpsMult;
+        this.position.y += Math.sin(this.theta) * this.velocity * this.game.time.desiredFpsMult;
     }
 }
 
